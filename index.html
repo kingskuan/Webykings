@@ -3,583 +3,526 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>大王 · Projects</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>Kings Kuan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --bg:#050507;
-  --font:'Inter',system-ui,sans-serif;
-  --mono:'JetBrains Mono',monospace;
+  --bg:#060608;
+  --surface:#0c0c10;
+  --border:rgba(255,255,255,0.07);
+  --border-bright:rgba(255,255,255,0.13);
+  --text:#f0f0f2;
+  --muted:rgba(255,255,255,0.38);
+  --faint:rgba(255,255,255,0.14);
+  --font:'Geist',system-ui,sans-serif;
+  --mono:'Geist Mono',ui-monospace,monospace;
 }
-
 html{scroll-behavior:smooth}
 body{
   font-family:var(--font);
+  font-feature-settings:'liga';
   background:var(--bg);
-  color:#fff;
+  color:var(--text);
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  min-height:100vh;
 }
 
-/* ─── CANVAS (particle bg) ─── */
-#canvas{
-  position:fixed;
-  inset:0;
-  z-index:0;
+/* ── NOISE TEXTURE overlay ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.025;
   pointer-events:none;
-  opacity:.45;
 }
 
-/* ─── NAV ─── */
+/* ── AMBIENT LIGHT ── */
+.ambient{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 30%,rgba(109,40,217,.09) 0%,transparent 65%),
+    radial-gradient(ellipse 60% 45% at 85% 70%,rgba(37,99,235,.07) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 40% at 50% 100%,rgba(5,150,105,.05) 0%,transparent 60%);
+}
+
+/* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:56px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 40px;
-  background:rgba(5,5,7,.7);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.06);
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(6,6,8,.82);
+  backdrop-filter:blur(24px) saturate(1.2);
+  -webkit-backdrop-filter:blur(24px) saturate(1.2);
+  border-bottom:1px solid var(--border);
 }
-.nav-logo{
-  font-size:14px;font-weight:700;letter-spacing:-.3px;
-  color:#fff;text-decoration:none;
-  display:flex;align-items:center;gap:10px;
+.nav-left{
+  display:flex;align-items:center;gap:32px;
 }
-.nav-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:linear-gradient(135deg,#a78bfa,#60a5fa);
-  box-shadow:0 0 8px #a78bfa;
-  animation:pulse 2s ease-in-out infinite;
+.brand{
+  font-size:13px;font-weight:600;letter-spacing:-.2px;
+  color:var(--text);text-decoration:none;
 }
-@keyframes pulse{0%,100%{box-shadow:0 0 8px #a78bfa}50%{box-shadow:0 0 16px #a78bfa,0 0 32px rgba(167,139,250,.4)}}
-
-.nav-links{display:flex;gap:4px;list-style:none}
+.nav-links{display:flex;gap:2px;list-style:none}
 .nav-links a{
-  font-size:13px;font-weight:500;color:rgba(255,255,255,.5);
-  text-decoration:none;padding:5px 12px;border-radius:6px;
-  transition:color .15s,background .15s;
+  font-size:13px;font-weight:400;color:var(--muted);
+  text-decoration:none;padding:4px 10px;border-radius:6px;
+  transition:color .12s,background .12s;
 }
-.nav-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
-.nav-cta{
-  font-size:13px;font-weight:600;color:#fff;
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  border:none;border-radius:8px;padding:7px 16px;
-  text-decoration:none;cursor:pointer;
-  transition:opacity .15s,transform .15s;
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.badge{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:rgba(52,211,153,.8);
+  background:rgba(52,211,153,.08);
+  border:1px solid rgba(52,211,153,.18);
+  border-radius:100px;padding:3px 10px;
+  display:flex;align-items:center;gap:5px;
 }
-.nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+.badge-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:#34d399;
+  animation:glow 2.4s ease-in-out infinite;
+}
+@keyframes glow{0%,100%{box-shadow:0 0 4px #34d399}50%{box-shadow:0 0 10px #34d399,0 0 20px rgba(52,211,153,.3)}}
 
-/* ─── HERO ─── */
+/* ── HERO ── */
 .hero{
+  position:relative;z-index:10;
   min-height:100vh;
   display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;
-  padding:120px 40px 80px;
-  position:relative;z-index:10;
+  align-items:flex-start;justify-content:flex-end;
+  padding:0 64px 96px;
+  overflow:hidden;
 }
 
-/* mesh gradient behind hero */
-.hero-mesh{
-  position:absolute;inset:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 60% 50% at 20% 40%,rgba(124,58,237,.18) 0%,transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 60%,rgba(37,99,235,.15) 0%,transparent 60%),
-    radial-gradient(ellipse 40% 30% at 50% 80%,rgba(16,185,129,.1) 0%,transparent 60%);
+/* big background text */
+.hero-bg-text{
+  position:absolute;
+  bottom:-60px;left:-20px;
+  font-size:clamp(160px,22vw,340px);
+  font-weight:700;
+  letter-spacing:-12px;
+  line-height:1;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(255,255,255,.04);
+  pointer-events:none;
+  user-select:none;
+  white-space:nowrap;
 }
 
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(167,139,250,.3);
-  border-radius:100px;padding:5px 14px 5px 8px;
-  font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.6);
-  background:rgba(124,58,237,.08);
-  margin-bottom:36px;
-  animation:fadeUp .8s ease both;
-}
-.hero-eyebrow-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#a78bfa;box-shadow:0 0 8px #a78bfa;
-}
+.hero-content{position:relative;z-index:2;max-width:900px}
 
-.hero-title{
-  font-size:clamp(56px,9vw,110px);
-  font-weight:900;
-  line-height:.92;
-  letter-spacing:-4px;
+.hero-label{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
   margin-bottom:28px;
-  animation:fadeUp .8s .1s ease both;
+  display:flex;align-items:center;gap:10px;
 }
-.hero-title .line1{
+.hero-label::before{
+  content:'';display:block;
+  width:24px;height:1px;background:var(--faint);
+}
+
+h1{
+  font-size:clamp(52px,7.5vw,112px);
+  font-weight:600;
+  letter-spacing:-3.5px;
+  line-height:.95;
+  color:var(--text);
+  margin-bottom:36px;
+}
+h1 .accent{
   display:block;
-  background:linear-gradient(135deg,#fff 30%,rgba(255,255,255,.6));
+  background:linear-gradient(105deg,#c4b5fd 0%,#93c5fd 40%,#6ee7b7 80%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
 }
-.hero-title .line2{
-  display:block;
-  background:linear-gradient(135deg,#a78bfa,#60a5fa,#34d399);
-  background-size:200%;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  animation:gradientShift 4s ease infinite;
-}
-@keyframes gradientShift{0%,100%{background-position:0%}50%{background-position:100%}}
 
 .hero-sub{
-  font-size:18px;font-weight:400;
-  color:rgba(255,255,255,.45);
-  line-height:1.6;max-width:460px;
-  margin-bottom:48px;
-  animation:fadeUp .8s .2s ease both;
+  font-size:17px;font-weight:400;
+  color:var(--muted);
+  line-height:1.65;
+  max-width:480px;
+  margin-bottom:52px;
+  letter-spacing:-.1px;
 }
 
-.hero-actions{
-  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
-  animation:fadeUp .8s .3s ease both;
-}
-.btn-p{
-  font-size:15px;font-weight:700;color:#fff;
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  border:none;border-radius:10px;padding:12px 28px;
-  cursor:pointer;text-decoration:none;
-  transition:transform .15s,box-shadow .15s;
-  box-shadow:0 0 20px rgba(124,58,237,.35);
-}
-.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.5)}
+.hero-cta{display:flex;align-items:center;gap:12px}
 
-.btn-g{
-  font-size:15px;font-weight:600;color:rgba(255,255,255,.7);
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:10px;padding:11px 28px;
-  cursor:pointer;text-decoration:none;
-  transition:background .15s,color .15s,transform .15s;
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:13px;font-weight:500;
+  border-radius:8px;padding:9px 18px;
+  text-decoration:none;cursor:pointer;border:none;
+  transition:all .15s;
+  letter-spacing:-.1px;
 }
-.btn-g:hover{background:rgba(255,255,255,.09);color:#fff;transform:translateY(-2px)}
-
-/* scroll hint */
-.scroll-hint{
-  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  color:rgba(255,255,255,.2);font-size:11px;font-family:var(--mono);
-  animation:fadeUp .8s .6s ease both;
+.btn-dark{
+  background:var(--text);color:#060608;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12);
 }
-.scroll-line{
-  width:1px;height:40px;
-  background:linear-gradient(to bottom,rgba(255,255,255,.2),transparent);
-  animation:scrollLine 1.5s ease-in-out infinite;
+.btn-dark:hover{background:rgba(240,240,242,.88);transform:translateY(-1px)}
+.btn-line{
+  background:transparent;color:var(--muted);
+  box-shadow:0 0 0 1px var(--border);
 }
-@keyframes scrollLine{0%,100%{transform:scaleY(1);opacity:.5}50%{transform:scaleY(.6);opacity:1}}
+.btn-line:hover{color:var(--text);box-shadow:0 0 0 1px var(--border-bright);transform:translateY(-1px)}
 
-/* ─── SECTION ─── */
-section{max-width:1120px;margin:0 auto;padding:96px 40px;position:relative;z-index:10}
+/* scroll counter */
+.hero-scroll{
+  position:absolute;right:40px;bottom:40px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:10px;color:var(--faint);
+  letter-spacing:.08em;
+}
+.scroll-track{width:1px;height:48px;background:var(--border);position:relative;overflow:hidden}
+.scroll-track::after{
+  content:'';position:absolute;top:-100%;left:0;right:0;
+  height:50%;background:rgba(255,255,255,.3);
+  animation:trackDown 1.8s ease-in-out infinite;
+}
+@keyframes trackDown{0%{top:-50%}100%{top:150%}}
 
-.s-label{
-  font-size:11px;font-weight:600;font-family:var(--mono);
-  color:#a78bfa;letter-spacing:.12em;text-transform:uppercase;
+/* ── SECTION BASE ── */
+.wrap{
+  position:relative;z-index:10;
+  max-width:1100px;margin:0 auto;
+  padding:96px 40px;
+}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--border);margin:0 40px}
+
+/* ── EYEBROW ── */
+.eyebrow{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--muted);letter-spacing:.1em;text-transform:uppercase;
   margin-bottom:12px;
 }
-.s-title{
-  font-size:clamp(32px,4vw,52px);
-  font-weight:800;letter-spacing:-2px;line-height:1;
-  margin-bottom:16px;
-}
-.s-sub{
-  font-size:16px;color:rgba(255,255,255,.4);
-  max-width:440px;line-height:1.65;
-  margin-bottom:64px;
-}
 
-/* ─── STATS ROW ─── */
-.stats{
+/* ── METRICS STRIP ── */
+.metrics{
   display:grid;grid-template-columns:repeat(4,1fr);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:16px;overflow:hidden;
+  border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;background:rgba(255,255,255,.015);
   margin-bottom:80px;
-  background:rgba(255,255,255,.015);
 }
-.stat{
-  padding:32px 28px;
-  border-right:1px solid rgba(255,255,255,.07);
+.metric{
+  padding:28px 24px;
+  border-right:1px solid var(--border);
 }
-.stat:last-child{border-right:none}
-.stat-n{
-  font-size:36px;font-weight:800;letter-spacing:-2px;
-  background:linear-gradient(135deg,#fff,rgba(255,255,255,.6));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+.metric:last-child{border-right:none}
+.metric-n{
+  font-size:32px;font-weight:600;letter-spacing:-1.5px;
+  color:var(--text);line-height:1;
   margin-bottom:6px;
 }
-.stat-l{font-size:12px;font-family:var(--mono);color:rgba(255,255,255,.3)}
+.metric-l{
+  font-family:var(--mono);font-size:11px;
+  color:var(--muted);letter-spacing:.04em;
+}
 
-/* ─── PROJECT CARDS ─── */
-.grid{
+/* ── PROJECT GRID ── */
+.projects{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:16px;
+  gap:12px;
 }
 
-.card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  overflow:hidden;
+.proj{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
   text-decoration:none;color:inherit;
   display:flex;flex-direction:column;
-  transition:transform .2s,border-color .2s,box-shadow .2s;
-  position:relative;
+  overflow:hidden;
+  transition:border-color .2s,transform .2s;
+  group:true;
 }
-.card:hover{
-  transform:translateY(-4px);
-  border-color:rgba(255,255,255,.16);
+.proj:hover{
+  border-color:var(--border-bright);
+  transform:translateY(-3px);
 }
-.card:hover .card-arrow{opacity:1;transform:translate(2px,-2px)}
+.proj:hover .proj-arrow{opacity:1;transform:translate(3px,-3px)}
+.proj:hover .proj-shine{opacity:1}
 
-/* card accent top bar */
-.card-bar{height:3px;width:100%}
-.c1 .card-bar{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
-.c2 .card-bar{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
-.c3 .card-bar{background:linear-gradient(90deg,#047857,#34d399)}
-.c4 .card-bar{background:linear-gradient(90deg,#7c3aed,#ec4899)}
+/* top gradient line */
+.proj-line{height:1px;width:100%}
+.pa .proj-line{background:linear-gradient(90deg,rgba(167,139,250,.6),rgba(167,139,250,0))}
+.pb .proj-line{background:linear-gradient(90deg,rgba(96,165,250,.6),rgba(96,165,250,0))}
+.pc .proj-line{background:linear-gradient(90deg,rgba(52,211,153,.6),rgba(52,211,153,0))}
+.pd .proj-line{background:linear-gradient(90deg,rgba(244,114,182,.6),rgba(244,114,182,0))}
 
-/* card glow on hover */
-.card::after{
-  content:'';
-  position:absolute;inset:0;
-  opacity:0;transition:opacity .3s;
-  pointer-events:none;
-  border-radius:16px;
+/* hover shine */
+.proj-shine{
+  position:absolute;inset:0;opacity:0;
+  transition:opacity .3s;pointer-events:none;
 }
-.c1::after{background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.1),transparent 60%)}
-.c2::after{background:radial-gradient(ellipse at 50% 0%,rgba(37,99,235,.1),transparent 60%)}
-.c3::after{background:radial-gradient(ellipse at 50% 0%,rgba(16,185,129,.1),transparent 60%)}
-.c4::after{background:radial-gradient(ellipse at 50% 0%,rgba(236,72,153,.1),transparent 60%)}
-.card:hover::after{opacity:1}
+.pa .proj-shine{background:radial-gradient(ellipse 60% 30% at 30% 0%,rgba(167,139,250,.06),transparent)}
+.pb .proj-shine{background:radial-gradient(ellipse 60% 30% at 30% 0%,rgba(96,165,250,.06),transparent)}
+.pc .proj-shine{background:radial-gradient(ellipse 60% 30% at 30% 0%,rgba(52,211,153,.06),transparent)}
+.pd .proj-shine{background:radial-gradient(ellipse 60% 30% at 30% 0%,rgba(244,114,182,.06),transparent)}
 
-.card-inner{padding:24px;flex:1;display:flex;flex-direction:column;gap:12px}
+.proj-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column;gap:10px}
 
-.card-head{display:flex;align-items:flex-start;justify-content:space-between}
+.proj-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 
-.card-icon{
-  width:40px;height:40px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.04);
+.proj-meta{display:flex;flex-direction:column;gap:4px}
+.proj-name{
+  font-size:15px;font-weight:600;letter-spacing:-.3px;
+  color:var(--text);
 }
-
-.card-arrow{
-  font-size:18px;color:rgba(255,255,255,.3);
-  opacity:.4;
-  transition:opacity .2s,transform .2s;
+.proj-host{
+  font-family:var(--mono);font-size:10px;
+  color:var(--faint);letter-spacing:.02em;
 }
 
-.card-name{
-  font-size:18px;font-weight:700;letter-spacing:-.4px;
-  color:#fff;
-}
-.card-desc{
-  font-size:14px;color:rgba(255,255,255,.45);
-  line-height:1.65;flex:1;
+.proj-arrow{
+  font-size:16px;color:var(--faint);
+  opacity:.4;transition:opacity .2s,transform .2s;
+  flex-shrink:0;margin-top:2px;
 }
 
-.card-foot{
+.proj-desc{
+  font-size:13px;font-weight:400;
+  color:var(--muted);line-height:1.65;
+  letter-spacing:-.05px;
+  flex:1;
+}
+
+.proj-footer{
   display:flex;align-items:center;justify-content:space-between;
-  padding-top:16px;
-  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.05);
 }
-.tags{display:flex;gap:6px;flex-wrap:wrap}
+
+.tags{display:flex;gap:5px;flex-wrap:wrap}
 .tag{
-  font-size:11px;font-weight:500;font-family:var(--mono);
-  color:rgba(255,255,255,.3);
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  color:var(--faint);
   background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:4px;padding:3px 8px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:4px;padding:2px 7px;
+  letter-spacing:.03em;
 }
+
 .live{
-  display:flex;align-items:center;gap:6px;
-  font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.3);
+  display:flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:10px;color:var(--faint);
 }
 .live-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#10b981;box-shadow:0 0 6px #10b981;
-  animation:livePulse 2s ease-in-out infinite;
+  width:5px;height:5px;border-radius:50%;
+  background:#34d399;
+  animation:glow 2.4s ease-in-out infinite;
 }
-@keyframes livePulse{0%,100%{box-shadow:0 0 4px #10b981}50%{box-shadow:0 0 10px #10b981,0 0 20px rgba(16,185,129,.3)}}
 
-/* ─── FOOTER ─── */
-.footer-wrap{
-  border-top:1px solid rgba(255,255,255,.06);
-  position:relative;z-index:10;
-}
+/* ── FOOTER ── */
 footer{
-  max-width:1120px;margin:0 auto;
-  padding:36px 40px;
+  position:relative;z-index:10;
+  border-top:1px solid var(--border);
+}
+.footer-inner{
+  max-width:1100px;margin:0 auto;
+  padding:28px 40px;
   display:flex;align-items:center;justify-content:space-between;
 }
-.footer-l{font-size:14px;font-weight:600;color:rgba(255,255,255,.25)}
-.footer-r{font-size:12px;font-family:var(--mono);color:rgba(255,255,255,.15)}
+.footer-l{font-size:13px;font-weight:500;color:var(--faint)}
+.footer-r{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.12)}
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(24px)}
-  to{opacity:1;transform:none}
-}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.reveal.on{opacity:1;transform:none}
-.reveal:nth-child(2){transition-delay:.07s}
-.reveal:nth-child(3){transition-delay:.14s}
-.reveal:nth-child(4){transition-delay:.21s}
+/* ── SCROLL REVEAL ── */
+.r{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.r.on{opacity:1;transform:none}
+.r:nth-child(2){transition-delay:.06s}
+.r:nth-child(3){transition-delay:.12s}
+.r:nth-child(4){transition-delay:.18s}
 
-/* ─── RESPONSIVE ─── */
+/* ── RESPONSIVE ── */
 @media(max-width:768px){
   nav{padding:0 20px}
   .nav-links{display:none}
-  section{padding:64px 20px}
-  .hero{padding:100px 24px 80px}
-  .hero-title{letter-spacing:-2px}
-  .grid{grid-template-columns:1fr}
-  .stats{grid-template-columns:repeat(2,1fr)}
-  .stat:nth-child(2){border-right:none}
-  footer{flex-direction:column;gap:12px;text-align:center;padding:28px 20px}
+  .hero{padding:0 28px 72px;align-items:flex-start;justify-content:flex-end}
+  .hero-bg-text{font-size:22vw;letter-spacing:-6px}
+  h1{font-size:clamp(40px,10vw,64px);letter-spacing:-2px}
+  .wrap{padding:64px 24px}
+  hr{margin:0 24px}
+  .projects{grid-template-columns:1fr}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .metric:nth-child(2){border-right:none}
+  .footer-inner{flex-direction:column;gap:10px;text-align:center;padding:24px}
+  .hero-scroll{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- particle canvas -->
-<canvas id="canvas"></canvas>
+<div class="ambient"></div>
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#">
-    <div class="nav-dot"></div>
-    大王 / projects
-  </a>
-  <ul class="nav-links">
-    <li><a href="#projects">作品</a></li>
-    <li><a href="#about">关于</a></li>
-  </ul>
-  <a class="nav-cta" href="#projects">查看全部 →</a>
+  <div class="nav-left">
+    <a class="brand" href="#">Kings Kuan</a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <span class="badge"><span class="badge-dot"></span>4 projects live</span>
+  </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <div class="hero-mesh"></div>
+<div class="hero">
+  <div class="hero-bg-text">BUILD</div>
 
-  <div class="hero-eyebrow">
-    <div class="hero-eyebrow-dot"></div>
-    4 个项目 · 全部在线运行中
+  <div class="hero-content">
+    <div class="hero-label">Portfolio · 2026</div>
+    <h1>
+      Making things<br>
+      <span class="accent">that matter.</span>
+    </h1>
+    <p class="hero-sub">
+      AI · Web3 · DeFi · Automation<br>
+      Products built to run, not just demo.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-dark" href="#work">View work ↓</a>
+      <a class="btn btn-line" href="#about">About</a>
+    </div>
   </div>
 
-  <h1 class="hero-title">
-    <span class="line1">构建于</span>
-    <span class="line2">AI 时代</span>
-  </h1>
-
-  <p class="hero-sub">Web3 · AI · DeFi · 数据分析<br>所有作品集中于此，一处管理。</p>
-
-  <div class="hero-actions">
-    <a class="btn-p" href="#projects">浏览作品</a>
-    <a class="btn-g" href="#about">了解更多</a>
-  </div>
-
-  <div class="scroll-hint">
-    <div class="scroll-line"></div>
+  <div class="hero-scroll">
+    <div class="scroll-track"></div>
     scroll
   </div>
-</section>
-
-<!-- ABOUT / STATS -->
-<section id="about">
-  <div class="s-label reveal">// overview</div>
-  <h2 class="s-title reveal">一览</h2>
-  <p class="s-sub reveal">覆盖 AI 分析、量化交易、金融科技与自动化系统四大方向。</p>
-
-  <div class="stats reveal">
-    <div class="stat"><div class="stat-n">4</div><div class="stat-l">在线项目</div></div>
-    <div class="stat"><div class="stat-n">3+</div><div class="stat-l">技术领域</div></div>
-    <div class="stat"><div class="stat-n">AI</div><div class="stat-l">核心驱动</div></div>
-    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">持续运行</div></div>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="s-label reveal">// projects</div>
-  <h2 class="s-title reveal">所有作品</h2>
-  <p class="s-sub reveal">点击卡片直接访问，全部线上部署。</p>
-
-  <div class="grid">
-
-    <a class="card c1 reveal" href="https://godview.up.railway.app/" target="_blank" rel="noopener">
-      <div class="card-bar"></div>
-      <div class="card-inner">
-        <div class="card-head">
-          <div class="card-icon">🔭</div>
-          <span class="card-arrow">↗</span>
-        </div>
-        <div class="card-name">GodView</div>
-        <div class="card-desc">AI 驱动的数据分析 Dashboard。实时洞察，智能可视化，支持多账户管理与数据聚合。</div>
-        <div class="card-foot">
-          <div class="tags">
-            <span class="tag">AI Analytics</span>
-            <span class="tag">Dashboard</span>
-            <span class="tag">Railway</span>
-          </div>
-          <div class="live"><div class="live-dot"></div>live</div>
-        </div>
-      </div>
-    </a>
-
-    <a class="card c2 reveal" href="https://bs-lp.vercel.app/" target="_blank" rel="noopener">
-      <div class="card-bar"></div>
-      <div class="card-inner">
-        <div class="card-head">
-          <div class="card-icon">💰</div>
-          <span class="card-arrow">↗</span>
-        </div>
-        <div class="card-name">BetterSave</div>
-        <div class="card-desc">智能储蓄 Landing Page。5.2% APY 高收益、自动化理财、退休规划工具，面向美国市场。</div>
-        <div class="card-foot">
-          <div class="tags">
-            <span class="tag">FinTech</span>
-            <span class="tag">Landing</span>
-            <span class="tag">Vercel</span>
-          </div>
-          <div class="live"><div class="live-dot"></div>live</div>
-        </div>
-      </div>
-    </a>
-
-    <a class="card c3 reveal" href="https://minara-backtest-production.up.railway.app/" target="_blank" rel="noopener">
-      <div class="card-bar"></div>
-      <div class="card-inner">
-        <div class="card-head">
-          <div class="card-icon">📊</div>
-          <span class="card-arrow">↗</span>
-        </div>
-        <div class="card-name">Minara Backtest</div>
-        <div class="card-desc">AI 量化策略回测平台。SMA / RSI / Bollinger / MACD，覆盖加密与股票，完整绩效报告。</div>
-        <div class="card-foot">
-          <div class="tags">
-            <span class="tag">Quant</span>
-            <span class="tag">Crypto</span>
-            <span class="tag">Railway</span>
-          </div>
-          <div class="live"><div class="live-dot"></div>live</div>
-        </div>
-      </div>
-    </a>
-
-    <a class="card c4 reveal" href="https://worker-production-32a9.up.railway.app/dashboard?key=KingsPendle2026MainSecret" target="_blank" rel="noopener">
-      <div class="card-bar"></div>
-      <div class="card-inner">
-        <div class="card-head">
-          <div class="card-icon">⚙️</div>
-          <span class="card-arrow">↗</span>
-        </div>
-        <div class="card-name">Worker Dashboard</div>
-        <div class="card-desc">自动化任务管理与监控面板。私有访问，实时追踪 Worker 状态，定时任务管理。</div>
-        <div class="card-foot">
-          <div class="tags">
-            <span class="tag">Automation</span>
-            <span class="tag">Private</span>
-            <span class="tag">Railway</span>
-          </div>
-          <div class="live"><div class="live-dot"></div>live</div>
-        </div>
-      </div>
-    </a>
-
-  </div>
-</section>
-
-<!-- FOOTER -->
-<div class="footer-wrap">
-  <footer>
-    <div class="footer-l">大王 · projects</div>
-    <div class="footer-r">// built by 奴才 · 2026</div>
-  </footer>
 </div>
 
+<hr>
+
+<!-- ABOUT / METRICS -->
+<div class="wrap" id="about">
+  <div class="eyebrow r">overview</div>
+  <div class="metrics r">
+    <div class="metric"><div class="metric-n">4</div><div class="metric-l">live projects</div></div>
+    <div class="metric"><div class="metric-n">3+</div><div class="metric-l">domains</div></div>
+    <div class="metric"><div class="metric-n">AI</div><div class="metric-l">core stack</div></div>
+    <div class="metric"><div class="metric-n">24/7</div><div class="metric-l">uptime</div></div>
+  </div>
+</div>
+
+<hr>
+
+<!-- PROJECTS -->
+<div class="wrap" id="work">
+  <div class="eyebrow r">work</div>
+
+  <div class="projects">
+
+    <a class="proj pa r" href="https://godview.up.railway.app/" target="_blank" rel="noopener">
+      <div class="proj-line"></div>
+      <div class="proj-shine"></div>
+      <div class="proj-body">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <div class="proj-name">GodView</div>
+            <div class="proj-host">godview.up.railway.app</div>
+          </div>
+          <span class="proj-arrow">↗</span>
+        </div>
+        <div class="proj-desc">AI-powered analytics dashboard. Real-time insights, multi-account data aggregation, and intelligent visualisation.</div>
+        <div class="proj-footer">
+          <div class="tags">
+            <span class="tag">AI</span><span class="tag">Analytics</span><span class="tag">Railway</span>
+          </div>
+          <div class="live"><div class="live-dot"></div>live</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="proj pb r" href="https://bs-lp.vercel.app/" target="_blank" rel="noopener">
+      <div class="proj-line"></div>
+      <div class="proj-shine"></div>
+      <div class="proj-body">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <div class="proj-name">BetterSave</div>
+            <div class="proj-host">bs-lp.vercel.app</div>
+          </div>
+          <span class="proj-arrow">↗</span>
+        </div>
+        <div class="proj-desc">Smart savings app landing page. 5.2% APY, automated wealth management, and retirement planning tools for the US market.</div>
+        <div class="proj-footer">
+          <div class="tags">
+            <span class="tag">FinTech</span><span class="tag">Landing</span><span class="tag">Vercel</span>
+          </div>
+          <div class="live"><div class="live-dot"></div>live</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="proj pc r" href="https://minara-backtest-production.up.railway.app/" target="_blank" rel="noopener">
+      <div class="proj-line"></div>
+      <div class="proj-shine"></div>
+      <div class="proj-body">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <div class="proj-name">Minara Backtest</div>
+            <div class="proj-host">minara-backtest-production.up.railway.app</div>
+          </div>
+          <span class="proj-arrow">↗</span>
+        </div>
+        <div class="proj-desc">Quant strategy backtesting platform. SMA, RSI, Bollinger, MACD — across crypto and equities with full performance reports.</div>
+        <div class="proj-footer">
+          <div class="tags">
+            <span class="tag">Quant</span><span class="tag">Crypto</span><span class="tag">Railway</span>
+          </div>
+          <div class="live"><div class="live-dot"></div>live</div>
+        </div>
+      </div>
+    </a>
+
+    <a class="proj pd r" href="https://worker-production-32a9.up.railway.app/dashboard?key=KingsPendle2026MainSecret" target="_blank" rel="noopener">
+      <div class="proj-line"></div>
+      <div class="proj-shine"></div>
+      <div class="proj-body">
+        <div class="proj-head">
+          <div class="proj-meta">
+            <div class="proj-name">Worker Dashboard</div>
+            <div class="proj-host">worker-production-32a9.up.railway.app</div>
+          </div>
+          <span class="proj-arrow">↗</span>
+        </div>
+        <div class="proj-desc">Private automation and task monitoring dashboard. Real-time worker status tracking and scheduled job management.</div>
+        <div class="proj-footer">
+          <div class="tags">
+            <span class="tag">Automation</span><span class="tag">Private</span><span class="tag">Railway</span>
+          </div>
+          <div class="live"><div class="live-dot"></div>live</div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-l">Kings Kuan</span>
+    <span class="footer-r">// 2026</span>
+  </div>
+</footer>
+
 <script>
-/* ── PARTICLES ── */
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-let W, H, particles = [];
-
-function resize(){
-  W = canvas.width = innerWidth;
-  H = canvas.height = innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-const COLORS = ['rgba(167,139,250,', 'rgba(96,165,250,', 'rgba(52,211,153,', 'rgba(236,72,153,'];
-
-class Particle{
-  constructor(){this.reset()}
-  reset(){
-    this.x = Math.random() * W;
-    this.y = Math.random() * H;
-    this.vx = (Math.random()-.5)*.3;
-    this.vy = (Math.random()-.5)*.3;
-    this.r = Math.random()*1.5+.3;
-    this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-    this.alpha = Math.random()*.6+.1;
-    this.life = 0;
-    this.maxLife = 200+Math.random()*400;
-  }
-  update(){
-    this.x += this.vx;
-    this.y += this.vy;
-    this.life++;
-    if(this.life>this.maxLife||this.x<0||this.x>W||this.y<0||this.y>H) this.reset();
-  }
-  draw(){
-    const a = this.life<40?this.life/40:this.life>this.maxLife-40?(this.maxLife-this.life)/40:1;
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-    ctx.fillStyle = this.color+(this.alpha*a)+')';
-    ctx.fill();
-  }
-}
-
-// connections
-function drawLines(){
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      const dx=particles[i].x-particles[j].x;
-      const dy=particles[i].y-particles[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<120){
-        ctx.beginPath();
-        ctx.strokeStyle=`rgba(167,139,250,${.06*(1-d/120)})`;
-        ctx.lineWidth=.5;
-        ctx.moveTo(particles[i].x,particles[i].y);
-        ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.stroke();
-      }
-    }
-  }
-}
-
-for(let i=0;i<120;i++) particles.push(new Particle());
-
-function animate(){
-  ctx.clearRect(0,0,W,H);
-  drawLines();
-  particles.forEach(p=>{p.update();p.draw()});
-  requestAnimationFrame(animate);
-}
-animate();
-
-/* ── SCROLL REVEAL ── */
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target)}});
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})
 },{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.r').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
