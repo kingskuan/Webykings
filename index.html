@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大王作品集</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Azeret+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000000;
+      --white: #ffffff;
+      --blue: #0099ff;
+      --silver: #a6a6a6;
+      --frosted: rgba(255,255,255,0.08);
+      --frosted-hover: rgba(255,255,255,0.14);
+      --ring: rgba(0,153,255,0.18);
+      --ring-hover: rgba(0,153,255,0.35);
+      --near-black: #0d0d0d;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --mono: 'Azeret Mono', ui-monospace, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--white);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--silver);
+      text-decoration: none;
+      letter-spacing: -0.1px;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--frosted);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--frosted-hover);
+      border-color: rgba(255,255,255,0.22);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,153,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--frosted);
+      border: 1px solid rgba(0,153,255,0.25);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: var(--blue);
+      font-family: var(--mono);
+      letter-spacing: 0.02em;
+      margin-bottom: 36px;
+    }
+
+    .hero-badge span { color: var(--silver); }
+
+    .hero h1 {
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -4px;
+      line-height: 0.9;
+      color: var(--white);
+      margin-bottom: 28px;
+      max-width: 900px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--silver);
+      max-width: 500px;
+      line-height: 1.6;
+      letter-spacing: -0.01em;
+      margin-bottom: 48px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: #000;
+      border: none;
+      border-radius: 100px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--silver);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 12px 28px;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+
+    /* ── SECTION ── */
+    section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 40px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--blue);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -2.5px;
+      line-height: 1;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      color: var(--silver);
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 60px;
+    }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--near-black);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+      box-shadow: rgba(0,153,255,0.06) 0 0 0 1px;
+      position: relative;
+    }
+
+    .project-card:hover {
+      border-color: rgba(0,153,255,0.4);
+      box-shadow: rgba(0,153,255,0.18) 0 0 0 1px, rgba(0,0,0,0.4) 0 20px 40px;
+      transform: translateY(-3px);
+    }
+
+    .project-card:hover .card-arrow {
+      opacity: 1;
+      transform: translate(2px, -2px);
+    }
+
+    .card-preview {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-preview-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .project-card:hover .card-preview-glow { opacity: 1; }
+
+    .card-body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--white);
+    }
+
+    .card-arrow {
+      font-size: 18px;
+      color: var(--blue);
+      opacity: 0.4;
+      transition: opacity 0.2s, transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--silver);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-family: var(--mono);
+      color: rgba(0,153,255,0.8);
+      background: rgba(0,153,255,0.08);
+      border: 1px solid rgba(0,153,255,0.15);
+      border-radius: 100px;
+      padding: 3px 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 4px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00d084;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px #00d084;
+    }
+
+    .status-text {
+      font-size: 12px;
+      color: var(--silver);
+      font-family: var(--mono);
+    }
+
+    /* ── CARD ACCENT COLORS ── */
+    .card-godview .card-preview { background: linear-gradient(135deg, #050510 0%, #0a0a2a 100%); }
+    .card-godview .card-preview-glow { background: radial-gradient(circle at center, rgba(0,153,255,0.12), transparent 70%); }
+
+    .card-bettersave .card-preview { background: linear-gradient(135deg, #05050f 0%, #0a1025 100%); }
+    .card-bettersave .card-preview-glow { background: radial-gradient(circle at center, rgba(37,99,235,0.14), transparent 70%); }
+
+    .card-minara .card-preview { background: linear-gradient(135deg, #050808 0%, #071520 100%); }
+    .card-minara .card-preview-glow { background: radial-gradient(circle at center, rgba(0,212,255,0.12), transparent 70%); }
+
+    .card-worker .card-preview { background: linear-gradient(135deg, #080508 0%, #150a20 100%); }
+    .card-worker .card-preview-glow { background: radial-gradient(circle at center, rgba(153,0,255,0.12), transparent 70%); }
+
+    /* ── PREVIEW ICONS ── */
+    .preview-icon {
+      font-size: 52px;
+      filter: drop-shadow(0 0 20px rgba(0,153,255,0.3));
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ── STATS ── */
+    .stats-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    .stat-item {
+      flex: 1;
+      padding: 32px;
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--silver);
+      font-family: var(--mono);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 48px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-size: 14px;
+      color: var(--silver);
+    }
+
+    .footer-left strong {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .footer-mono {
+      font-size: 12px;
+      font-family: var(--mono);
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── SCROLL FADE IN ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section { padding: 60px 20px; }
+      .hero { padding: 100px 24px 60px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .stats-row { flex-direction: column; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+      .stat-item:last-child { border-bottom: none; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">大王 / Projects</a>
+    <ul class="nav-links">
+      <li><a href="#projects">作品</a></li>
+      <li><a href="#about">关于</a></li>
+    </ul>
+    <a class="nav-cta" href="#projects">查看全部</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">
+      <span>●</span> 4 个项目在线运行
+    </div>
+    <h1>构建于<br><em>AI 时代</em></h1>
+    <p class="hero-sub">
+      Web3 · AI · DeFi · 数据分析<br>
+      所有作品集中于此，一处管理。
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#projects">浏览作品 →</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <section id="about">
+    <div class="stats-row fade-in">
+      <div class="stat-item">
+        <div class="stat-num">4</div>
+        <div class="stat-label">在线项目</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">技术领域</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">AI</div>
+        <div class="stat-label">核心驱动</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">持续运行</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-label fade-in">// 作品集</div>
+    <h2 class="section-title fade-in">所有项目</h2>
+    <p class="section-sub fade-in">点击卡片直接访问。所有项目均在线部署并持续运行。</p>
+
+    <div class="projects-grid">
+
+      <!-- GodView -->
+      <a class="project-card card-godview fade-in" href="https://godview.up.railway.app/" target="_blank" rel="noopener">
+        <div class="card-preview">
+          <div class="card-preview-glow"></div>
+          <span class="preview-icon">🔭</span>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-name">GodView</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-desc">
+            AI 驱动的数据分析 Dashboard。实时洞察，智能可视化，支持多账户管理与数据聚合。
+          </div>
+          <div class="card-tags">
+            <span class="tag">AI Analytics</span>
+            <span class="tag">Dashboard</span>
+            <span class="tag">Railway</span>
+          </div>
+          <div class="card-meta">
+            <div class="status-dot"></div>
+            <span class="status-text">godview.up.railway.app</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- BetterSave -->
+      <a class="project-card card-bettersave fade-in" href="https://bs-lp.vercel.app/" target="_blank" rel="noopener">
+        <div class="card-preview">
+          <div class="card-preview-glow"></div>
+          <span class="preview-icon">💰</span>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-name">BetterSave</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-desc">
+            智能储蓄应用 Landing Page。高收益储蓄（5.2% APY）、自动化理财、退休规划工具，面向美国市场。
+          </div>
+          <div class="card-tags">
+            <span class="tag">FinTech</span>
+            <span class="tag">Landing Page</span>
+            <span class="tag">Vercel</span>
+          </div>
+          <div class="card-meta">
+            <div class="status-dot"></div>
+            <span class="status-text">bs-lp.vercel.app</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Minara Backtest -->
+      <a class="project-card card-minara fade-in" href="https://minara-backtest-production.up.railway.app/" target="_blank" rel="noopener">
+        <div class="card-preview">
+          <div class="card-preview-glow"></div>
+          <span class="preview-icon">📊</span>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-name">Minara Backtest</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-desc">
+            AI 驱动的量化策略回测平台。支持 SMA / RSI / Bollinger / MACD 策略，覆盖加密货币与股票资产，输出完整绩效报告。
+          </div>
+          <div class="card-tags">
+            <span class="tag">Quant</span>
+            <span class="tag">Backtesting</span>
+            <span class="tag">Crypto</span>
+            <span class="tag">Railway</span>
+          </div>
+          <div class="card-meta">
+            <div class="status-dot"></div>
+            <span class="status-text">minara-backtest-production.up.railway.app</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Worker Dashboard -->
+      <a class="project-card card-worker fade-in" href="https://worker-production-32a9.up.railway.app/dashboard?key=KingsPendle2026MainSecret" target="_blank" rel="noopener">
+        <div class="card-preview">
+          <div class="card-preview-glow"></div>
+          <span class="preview-icon">⚙️</span>
+        </div>
+        <div class="card-body">
+          <div class="card-top">
+            <div class="card-name">Worker Dashboard</div>
+            <div class="card-arrow">↗</div>
+          </div>
+          <div class="card-desc">
+            自动化任务管理与监控面板。私有访问，实时追踪 Worker 状态，适合后台自动化与定时任务管理。
+          </div>
+          <div class="card-tags">
+            <span class="tag">Automation</span>
+            <span class="tag">Dashboard</span>
+            <span class="tag">Private</span>
+            <span class="tag">Railway</span>
+          </div>
+          <div class="card-meta">
+            <div class="status-dot"></div>
+            <span class="status-text">worker-production-32a9.up.railway.app</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <strong>大王</strong> · 作品集
+    </div>
+    <div class="footer-mono">// 由奴才构建 · 2026</div>
+  </footer>
+
+  <script>
+    // Scroll fade-in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
