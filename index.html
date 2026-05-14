@@ -186,6 +186,7 @@ h1 .accent{
   animation:trackDown 1.8s ease-in-out infinite;
 }
 @keyframes trackDown{0%{top:-50%}100%{top:150%}}
+@keyframes cshift{0%,100%{background-position:0%}50%{background-position:100%}}
 
 /* ── SECTION BASE ── */
 .wrap{
@@ -383,28 +384,24 @@ footer{
   <!-- 币世王 centrepiece -->
   <div style="
     position:absolute;
-    top:50%; left:50%;
-    transform:translate(-50%,-54%);
+    top:28%; left:50%;
+    transform:translateX(-50%);
     text-align:center;
     pointer-events:none;
     user-select:none;
     z-index:1;
   ">
     <div style="
-      font-size:clamp(52px,14vw,160px);
+      font-size:clamp(64px,16vw,180px);
       font-weight:700;
-      letter-spacing:-.04em;
+      letter-spacing:-.03em;
       line-height:1;
-      background:linear-gradient(160deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,.08) 100%);
+      background:linear-gradient(120deg,#c4b5fd 0%,#818cf8 30%,#60a5fa 60%,#34d399 100%);
+      background-size:200%;
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;
       background-clip:text;
+      animation:cshift 6s ease infinite;
     ">币世王</div>
-    <div style="
-      margin-top:10px;
-      font-family:var(--mono);font-size:11px;font-weight:500;
-      letter-spacing:.18em;text-transform:uppercase;
-      color:rgba(255,255,255,.18);
-    ">Kings Kuan · Web3 Builder</div>
   </div>
 
   <div class="hero-content">
